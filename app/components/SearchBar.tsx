@@ -33,9 +33,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
     }
   };
 
-  const inputClass = isDarkMode
-    ? "px-3 py-1 bg-gray-800 text-white border-none"
-    : "px-3 py-1 bg-gray-100 text-gray-800 border-2 border-gray-400";
+  const inputClass = `px-3 py-1 border rounded ${
+    isDarkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
+  }`;
 
   return (
     <div className="flex items-center p-2 w-80 mx-auto">
