@@ -34,7 +34,7 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         Anterior
       </button>
-      <span className="text-sm">{`Página ${currentPage}`}</span>
+
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}

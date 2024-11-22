@@ -9,13 +9,17 @@ export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add("dark");
-      document.body.classList.remove("light");
-    } else {
-      document.body.classList.add("light");
-      document.body.classList.remove("dark");
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === "dark");
     }
+  }, []);
+
+  useEffect(() => {
+    const theme = isDarkMode ? "dark" : "light";
+    document.body.classList.add(theme);
+    document.body.classList.remove(isDarkMode ? "light" : "dark");
+    localStorage.setItem("theme", theme);
   }, [isDarkMode]);
 
   const toggleTheme = () => {
