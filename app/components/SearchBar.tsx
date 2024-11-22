@@ -4,9 +4,14 @@ import { FaSearch } from "react-icons/fa";
 interface SearchBarProps {
   onSearch: (query: string) => void;
   onClear: () => void;
+  isDarkMode: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onClear }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  onSearch,
+  onClear,
+  isDarkMode,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = () => {
@@ -28,15 +33,19 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onClear }) => {
     }
   };
 
+  const inputClass = isDarkMode
+    ? "px-3 py-1 bg-gray-800 text-white border-none"
+    : "px-3 py-1 bg-gray-100 text-gray-800 border-2 border-gray-400";
+
   return (
-    <div className="flex items-center border border-gray-300 rounded-full p-2 w-80 mx-auto">
+    <div className="flex items-center p-2 w-80 mx-auto">
       <input
         type="text"
         value={searchTerm}
         onChange={handleChange}
         onKeyDown={handleKeyPress}
         placeholder="Pesquisar Pokémon"
-        className="w-full px-4 py-2 rounded-full focus:outline-none"
+        className={inputClass}
       />
       <button
         onClick={handleSearch}
