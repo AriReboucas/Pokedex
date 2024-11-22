@@ -98,9 +98,7 @@ const App: React.FC = () => {
         >
           Anterior
         </button>
-        <span className="px-4 py-2 bg-gray-100">
-          Página {page} de {Math.ceil(totalPokemons / 21)}
-        </span>
+        <span className="px-4 py-2 bg-gray-100">Página {page}</span>
         <button
           onClick={() => handlePageChange(page + 1)}
           disabled={page * 21 >= totalPokemons}
