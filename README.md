@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Projeto desenvolvido para uma dinâmica de Desenvolvedor Front-End Jr
 
-## Getting Started
+Especificações do projeto:
+- existia um projeto base para a criação
+- consumo de dados da API - Poke API
+https://pokeapi.co/api/v2/pokemon?limit=60&offset=0
+documentação (https://pokeapi.co/)
+- Critérios de avaliação
+Renderizar os itens de acordo com o design proposto.
+Adicionar barra de procura para filtrar o pokemon baseado na escolha do usuário.
+Adicionar as cores do card baseado no tipo do pokemón, [lista de cores](https://github.com/vereda-ti/frontend-test#pokemonColorScheme).
+Adicionar um carregar mais ou infinite scroll para renderizar novos pokemons à lista.
 
-First, run the development server:
+- Lista de cores
+normal: "#a4acaf",
+fighting: "#d56723",
+flying: "#7ecdf7",
+poison: "#6f55af",
+ground: "#906727",
+rock: "#a38c21",
+bug: "#729f3f",
+ghost: "#7b62a3",
+steel: "#9eb7b8",
+fire: "#fd7d24",
+water: "#4592c4",
+grass: "#9bcc50",
+electric: "#eed535",
+psychic: "#f355b9",
+ice: "#51c4e7",
+dragon: "#fc801e",
+dark: "#707070",
+fairy: "#fdb9e9",
+unknown: "#666666",
+shadow: "#3b3b3b"
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
