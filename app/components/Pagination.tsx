@@ -2,42 +2,34 @@ import React from "react";
 
 interface PaginationProps {
   currentPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
+  totalPages,
   onPageChange,
 }) => {
-  const handleNext = () => {
-    onPageChange(currentPage + 1);
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
+  const handlePageChange = (page: number) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    onPageChange(page);
   };
 
   return (
-    <div className="flex justify-center items-center gap-4 py-6">
+    <div className="flex justify-center gap-2 mt-4">
       <button
-        className={`px-4 py-2 rounded ${
-          currentPage > 1
-            ? "bg-blue-500 text-white hover:bg-blue-600"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-        }`}
-        onClick={handlePrevious}
-        disabled={currentPage <= 1}
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
       >
         Anterior
       </button>
-
-      <span className="text-lg font-semibold">Página {currentPage}</span>
-
+      <span className="text-sm">{`Página ${currentPage}`}</span>
       <button
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        onClick={handleNext}
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="px-3 py-1 bg-gray-300 rounded disabled:opacity-50"
       >
         Próxima
       </button>

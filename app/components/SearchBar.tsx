@@ -1,34 +1,50 @@
 import React, { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
+  onClear: () => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [query, setQuery] = useState("");
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onClear }) => {
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    onSearch(query);
+  const handleSearch = () => {
+    onSearch(searchTerm);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value === "") {
+      onClear();
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6 flex items-center gap-2">
+    <div className="flex items-center border border-gray-300 rounded-full p-2 w-80 mx-auto">
       <input
         type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Buscar Pokemon..."
-        className="border border-gray-300 rounded-lg p-2 w-full"
+        value={searchTerm}
+        onChange={handleChange}
+        onKeyDown={handleKeyPress}
+        placeholder="Pesquisar Pokémon"
+        className="w-full px-4 py-2 rounded-full focus:outline-none"
       />
       <button
-        type="submit"
-        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition"
+        onClick={handleSearch}
+        className="p-2 ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
       >
-        {" "}
-        Buscar{" "}
+        <FaSearch />
       </button>
-    </form>
+    </div>
   );
 };
 

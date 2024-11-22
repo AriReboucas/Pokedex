@@ -1,102 +1,116 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { getPokemons } from "@/services/pokeApi";
 import SearchBar from "./SearchBar";
-import Pagination from "./Pagination";
+import PokemonCard from "./PokemonCard";
 
-interface Pokemon {
-  name: string;
-  id: number;
-  types: string[];
-  weight: number;
-  height: number;
-  image: string;
-}
+const App: React.FC = () => {
+  const [pokemons, setPokemons] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [totalPokemons, setTotalPokemons] = useState(0);
 
-const PokemonList: React.FC = () => {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [filteredPokemons, setFilteredPokemons] = useState<Pokemon[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(21);
+  const loadPokemons = async (page: number, search?: string) => {
+    setLoading(true);
+    const itemsPerPage = 21;
+    try {
+      let fetchedPokemons;
 
-  const fetchPokemons = useCallback(
-    async (page: number) => {
-      setLoading(true);
-      try {
-        const data = await getPokemons(page, itemsPerPage);
-        setPokemons((prev) => [...prev, ...data]);
-        setFilteredPokemons((prev) => [...prev, ...data]);
-      } catch (error) {
-        console.error("Erro ao buscar Pokémon:", error);
-      } finally {
-        setLoading(false);
+      if (search) {
+        fetchedPokemons = await getPokemonsByName(search);
+        setTotalPokemons(fetchedPokemons.length);
+      } else {
+        fetchedPokemons = await getPokemons(page, itemsPerPage);
+        setTotalPokemons(1118);
       }
-    },
-    [itemsPerPage]
-  );
 
-  useEffect(() => {
-    fetchPokemons(currentPage);
-  }, [currentPage, fetchPokemons]);
-
-  const handleSearch = (query: string) => {
-    if (!query) {
-      setFilteredPokemons(pokemons);
-    } else {
-      const filtered = pokemons.filter((pokemon) =>
-        pokemon.name.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredPokemons(filtered);
+      setPokemons(fetchedPokemons);
+    } catch (error) {
+      console.error("Erro ao carregar Pokémons:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const getPokemonsByName = async (name: string) => {
+    try {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${name.toLowerCase()}`
+      );
+      const data = await response.json();
+
+      return [
+        {
+          id: data.id,
+          name: data.name,
+          types: data.types.map((type: any) => type.type.name),
+          weight: data.weight,
+          height: data.height,
+          image: data.sprites.other["official-artwork"].front_default,
+        },
+      ];
+    } catch (error) {
+      console.error("Erro ao buscar Pokémon:", error);
+      return [];
+    }
   };
 
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
+    loadPokemons(1, query);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    loadPokemons(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    loadPokemons(newPage, searchTerm);
+  };
+
+  useEffect(() => {
+    loadPokemons(1);
+  }, []);
+
   return (
-    <div className="p-4">
-      <SearchBar onSearch={handleSearch} />
+    <div className="container mx-auto px-4">
+      <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
 
-      {loading && currentPage === 1 ? (
-        <div>Carregando...</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filteredPokemons.map((pokemon) => (
-            <div
-              key={pokemon.id}
-              className="bg-gray-200 p-4 rounded shadow hover:shadow-lg transition"
-            >
-              <div className="text-center">
-                <img
-                  src={pokemon.image}
-                  alt={pokemon.name}
-                  className="mx-auto my-4 w-32 h-32 object-cover rounded-full border-4 border-white shadow-md"
-                />
-                <h3 className="text-xl font-bold capitalize">{pokemon.name}</h3>
-                <p className="text-sm text-gray-700">ID: {pokemon.id}</p>
-              </div>
-              <div className="mt-4">
-                <p className="text-sm">Tipos: {pokemon.types.join(", ")}</p>
-                <p className="text-sm">Peso: {pokemon.weight / 10} kg</p>
-                <p className="text-sm">Altura: {pokemon.height / 10} m</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-3 gap-4">
+        {loading ? (
+          <div>Carregando...</div>
+        ) : (
+          pokemons.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          ))
+        )}
+      </div>
 
-      {!loading && filteredPokemons.length > 0 && (
-        <Pagination currentPage={currentPage} onPageChange={handlePageChange} />
-      )}
-
-      {loading && currentPage > 1 && (
-        <div className="text-center py-4">Carregando mais...</div>
-      )}
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+          className="px-4 py-2 bg-gray-300 rounded-l"
+        >
+          Anterior
+        </button>
+        <span className="px-4 py-2 bg-gray-100">
+          Página {page} de {Math.ceil(totalPokemons / 21)}
+        </span>
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page * 21 >= totalPokemons}
+          className="px-4 py-2 bg-gray-300 rounded-r"
+        >
+          Próxima
+        </button>
+      </div>
     </div>
   );
 };
 
-export default PokemonList;
+export default App;
