@@ -2,32 +2,33 @@ import axios from "axios";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 
-export const getPokemons = async () => {
+export const getPokemons = async (page, itemsPerPage) => {
   try {
-    const response = await axios.get(`${BASE_URL}?imit=60&offset=0`);
-    const pokemons = response.data.results;
+    const offset = (page - 1) * itemsPerPage;
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${itemsPerPage}`
+    );
+    const data = await response.json();
 
-    const pokemonsWithDetails = await Promise.all(
-      pokemons.map(async (pokemon: { name: string; url: string }) => {
-        const detailsResponse = await axios.get(pokemon.url);
-        const pokemonDetails = detailsResponse.data;
+    const pokemons = await Promise.all(
+      data.results.map(async (pokemon) => {
+        const detailsResponse = await fetch(pokemon.url);
+        const details = await detailsResponse.json();
 
         return {
-          name: pokemonDetails.name,
-          id: pokemonDetails.id,
-          types: pokemonDetails.types.map(
-            (type: { type: { name: string } }) => type.type.name
-          ),
-          weight: pokemonDetails.weight,
-          height: pokemonDetails.height,
-          image: pokemonDetails.sprites.front_default,
+          id: details.id,
+          name: details.name,
+          types: details.types.map((type) => type.type.name),
+          weight: details.weight,
+          height: details.height,
+          image: details.sprites.other["official-artwork"].front_default,
         };
       })
     );
 
-    return pokemonsWithDetails;
+    return pokemons;
   } catch (error) {
-    console.error("Erro ao buscar os detalhes do Pokémon:", error);
+    console.error("Erro ao buscar Pokémon da API:", error);
     return [];
   }
 };

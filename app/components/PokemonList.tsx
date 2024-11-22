@@ -20,21 +20,19 @@ const PokemonList: React.FC = () => {
   const itemsPerPage = 21;
 
   const fetchPokemons = useCallback(async () => {
-    if (loading) return;
     setLoading(true);
     try {
       const data = await getPokemons(page, itemsPerPage);
+      setPokemons(data);
       if (data.length === 0) {
         setHasMore(false);
-      } else {
-        setPokemons(data);
       }
     } catch (error) {
       console.error("Erro ao buscar Pokémon:", error);
     } finally {
       setLoading(false);
     }
-  }, [page]);
+  }, [page, itemsPerPage]);
 
   useEffect(() => {
     fetchPokemons();
