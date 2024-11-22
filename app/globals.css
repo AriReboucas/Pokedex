@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.light {
+  background-color: white;
+  color: black;
+}
+
+.dark {
+  background-color: black;
+  color: white;
+}
+
+.light .pagination {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.light .pagination button {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.light .pagination button:hover {
+  background-color: #d0d0d0;
+}
+
+.dark .pagination {
+  background-color: #333;
+  color: #e0e0e0;
+}
+
+.dark .pagination button {
+  background-color: #555;
+  color: #e0e0e0;
+}
+
+.dark .pagination button:hover {
+  background-color: #444;
+}
