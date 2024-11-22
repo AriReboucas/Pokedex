@@ -37,19 +37,19 @@ const typeColors: { [key: string]: string } = {
 const PokemonCard: React.FC<PokemonProps> = ({ pokemon }) => {
   return (
     <div
-      className="relative w-96 h-56 flex flex-col justify-between rounded-xl px-6 py-4"
+      className="relative flex flex-col justify-between rounded-xl px-4 py-4 shadow-lg transition-transform hover:scale-105"
       style={{
         backgroundColor: typeColors[pokemon.types[0]] || "#ccc",
       }}
     >
-      <div className="flex justify-center items-center gap-4 mb-3">
-        <h2 className="text-white text-3xl font-bold capitalize mr-2">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-white text-xl font-bold capitalize">
           {pokemon.name}
         </h2>
-        <p className="text-white text-2xl font-bold">#{pokemon.id}</p>
+        <p className="text-white text-lg font-semibold">#{pokemon.id}</p>
       </div>
 
-      <div className="flex justify-start gap-2 my-3">
+      <div className="flex flex-wrap gap-2 mb-4">
         {pokemon.types.map((type) => (
           <span
             key={type}
@@ -63,18 +63,18 @@ const PokemonCard: React.FC<PokemonProps> = ({ pokemon }) => {
         ))}
       </div>
 
-      <div className="flex justify-start gap-6 mt-3">
-        <div className="text-white text-base">
-          <p className="font-semibold">Height</p>
+      <div className="flex justify-between text-white text-sm">
+        <div>
+          <p className="font-semibold">Altura</p>
           <p>{pokemon.height / 10} m</p>
         </div>
-        <div className="text-white text-base">
-          <p className="font-semibold">Weight</p>
+        <div>
+          <p className="font-semibold">Peso</p>
           <p>{pokemon.weight / 10} kg</p>
         </div>
       </div>
 
-      <div className="absolute right-2 bottom-2 w-36 h-36">
+      <div className="absolute right-2 bottom-2 w-24 h-24">
         <img
           src={pokemon.image}
           alt={pokemon.name}

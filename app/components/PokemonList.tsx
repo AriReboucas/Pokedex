@@ -78,11 +78,17 @@ const App: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4">
-      <SearchBar onSearch={handleSearch} onClear={handleClearSearch} />
+      <SearchBar
+        onSearch={handleSearch}
+        onClear={handleClearSearch}
+        isDarkMode={false}
+      />
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-6">
         {loading ? (
-          <div>Carregando...</div>
+          <div className="text-center col-span-full">
+            <p className="text-lg font-semibold text-gray-700">Carregando...</p>
+          </div>
         ) : (
           pokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
@@ -90,11 +96,11 @@ const App: React.FC = () => {
         )}
       </div>
 
-      <div className="flex justify-center gap-4 mt-4">
+      <div className="flex justify-center gap-4 mt-6">
         <button
           onClick={() => handlePageChange(page - 1)}
           disabled={page === 1}
-          className="px-4 py-2 bg-blue-300 rounded-l"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
         >
           Anterior
         </button>
@@ -102,7 +108,7 @@ const App: React.FC = () => {
         <button
           onClick={() => handlePageChange(page + 1)}
           disabled={page * 21 >= totalPokemons}
-          className="px-4 py-2 bg-blue-300 rounded-r"
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
         >
           Próxima
         </button>
