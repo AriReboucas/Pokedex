@@ -2,7 +2,19 @@ import axios from "axios";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 
-export const getPokemons = async (page, itemsPerPage = 21) => {
+interface PokemonDetails {
+  id: number;
+  name: string;
+  types: string[];
+  weight: number;
+  height: number;
+  image: string;
+}
+
+export const getPokemons = async (
+  page: number,
+  itemsPerPage: number = 21
+): Promise<PokemonDetails[]> => {
   try {
     const offset = (page - 1) * itemsPerPage;
     const response = await axios.get(
@@ -10,15 +22,17 @@ export const getPokemons = async (page, itemsPerPage = 21) => {
     );
     const { results } = response.data;
 
-    const pokemons = await Promise.all(
-      results.map(async (pokemon) => {
+    const pokemons: PokemonDetails[] = await Promise.all(
+      results.map(async (pokemon: { url: string }) => {
         const detailsResponse = await axios.get(pokemon.url);
         const details = detailsResponse.data;
 
         return {
           id: details.id,
           name: details.name,
-          types: details.types.map((type) => type.type.name),
+          types: details.types.map(
+            (type: { type: { name: string } }) => type.type.name
+          ),
           weight: details.weight,
           height: details.height,
           image: details.sprites.other["official-artwork"].front_default,
@@ -33,7 +47,9 @@ export const getPokemons = async (page, itemsPerPage = 21) => {
   }
 };
 
-export const searchPokemonByName = async (name) => {
+export const searchPokemonByName = async (
+  name: string
+): Promise<PokemonDetails | null> => {
   try {
     const response = await axios.get(`${BASE_URL}/${name.toLowerCase()}`);
     const details = response.data;
@@ -41,12 +57,14 @@ export const searchPokemonByName = async (name) => {
     return {
       id: details.id,
       name: details.name,
-      types: details.types.map((type) => type.type.name),
+      types: details.types.map(
+        (type: { type: { name: string } }) => type.type.name
+      ),
       weight: details.weight,
       height: details.height,
       image: details.sprites.other["official-artwork"].front_default,
     };
-  } catch (error) {
+  } catch (error: any) {
     if (error.response && error.response.status === 404) {
       console.warn(`Pokémon "${name}" não encontrado.`);
     } else {
