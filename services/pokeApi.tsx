@@ -2,12 +2,6 @@ import axios from "axios";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 
-/**
- * Função para buscar a lista de Pokémons com paginação
- * @param {number} page - Página atual
- * @param {number} itemsPerPage - Quantidade de itens por página
- * @returns {Promise<Array>} - Lista de Pokémons formatados
- */
 export const getPokemons = async (page, itemsPerPage = 21) => {
   try {
     const offset = (page - 1) * itemsPerPage;
@@ -39,11 +33,6 @@ export const getPokemons = async (page, itemsPerPage = 21) => {
   }
 };
 
-/**
- * Função para buscar um Pokémon pelo nome
- * @param {string} name - Nome do Pokémon
- * @returns {Promise<Object|null>} - Detalhes do Pokémon ou null se não encontrado
- */
 export const searchPokemonByName = async (name) => {
   try {
     const response = await axios.get(`${BASE_URL}/${name.toLowerCase()}`);
